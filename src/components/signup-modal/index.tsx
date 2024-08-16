@@ -12,6 +12,7 @@ import { Button } from '../ui/button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import Link from 'next/link';
 
 const SignupSchema = z.object({
   email: z
@@ -127,7 +128,9 @@ const SignupModal = () => {
           </Button>
           <span className='text-dark-4 text-sm font-medium'>
             Already have an account?{' '}
-            <span className='text-dark-3 cursor-pointer'>{`Login->`}</span>
+            <Link href='/login'>
+              <span>{`Login->`}</span>
+            </Link>
           </span>
         </form>
       </Form>

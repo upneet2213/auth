@@ -1,7 +1,6 @@
 export type PostProps = {
   user: {
-    firstName: string;
-    lastName: string;
+    name: string;
     imageUrl?: string;
   };
   postedAt: number;

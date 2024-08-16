@@ -35,9 +35,7 @@ const Post: React.FC<PostProps> = ({
           className='rounded-full w-11 h-11 object-contain'
         />
         <div>
-          <p className='text-dark-3 mb-1'>
-            {user.firstName + ' ' + user.lastName}
-          </p>
+          <p className='text-dark-3 mb-1'>{user.name}</p>
           <div className='text-dark-4 text-sm flex items-center'>
             <p>{timeAgo}</p>
             {isEdited && (

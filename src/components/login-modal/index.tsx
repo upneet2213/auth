@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
   Form,
   FormControl,
@@ -12,6 +12,9 @@ import { Button } from '../ui/button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+import { setCookie } from 'cookies-next';
+import Link from 'next/link';
 
 const LoginSchema = z.object({
   emailOrUserName: z
@@ -27,6 +30,7 @@ const LoginSchema = z.object({
 });
 
 const LoginModal = () => {
+  const router = useRouter();
   const loginForm = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -36,7 +40,8 @@ const LoginModal = () => {
   });
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    console.log(data);
+    setCookie('authToken', data.emailOrUserName);
+    router.replace('/login');
   };
   return (
     <div className='w-[463px] min-h-[420px] mx-auto py-10 px-6 border-gray-500 border-2 bg-dark-1 rounded-lg'>
@@ -84,6 +89,7 @@ const LoginModal = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
+                        type='password'
                         placeholder='Enter your password'
                         className='bg-dark-1 border-dark-1'
                         {...field}
@@ -100,7 +106,9 @@ const LoginModal = () => {
           </Button>
           <span className='text-dark-4 text-sm font-medium'>
             Not registered yet?{' '}
-            <span className='text-dark-3 cursor-pointer'>{`Register->`}</span>
+            <Link href={'/signup'}>
+              <span className='text-dark-3 cursor-pointer'>{`Register->`}</span>
+            </Link>
           </span>
         </form>
       </Form>
