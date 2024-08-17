@@ -1,14 +1,14 @@
 'use client';
-import { getCookie } from 'cookies-next';
+import { useSession } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const user = getCookie('authToken');
   const router = useRouter();
+  const session = useSession();
 
-  if (!user) {
-    router.replace('/login');
+  if (session.status !== 'authenticated') {
+    router.push('/login');
   }
   return <div>{children}</div>;
 };

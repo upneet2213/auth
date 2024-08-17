@@ -1,4 +1,6 @@
-import React, { useRef } from 'react';
+'use client';
+
+import React from 'react';
 import {
   Form,
   FormControl,
@@ -13,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const SignupSchema = z.object({
   email: z
@@ -20,7 +23,7 @@ const SignupSchema = z.object({
       required_error: 'Email is required',
     })
     .min(1, 'Please enter an email'),
-  userName: z
+  username: z
     .string({ required_error: 'Username is required' })
     .min(1, 'Please enter a username'),
   password: z
@@ -31,17 +34,36 @@ const SignupSchema = z.object({
 });
 
 const SignupModal = () => {
+  const router = useRouter();
   const loginForm = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
       email: '',
-      userName: '',
+      username: '',
       password: '',
     },
   });
 
-  const onSubmit = (data: z.infer<typeof SignupSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof SignupSchema>) => {
+    const verifiedData = SignupSchema.safeParse(data);
+    if (verifiedData.error) {
+      return null;
+    }
+    try {
+      const response = await fetch(`/api/auth/register`, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: verifiedData.data.email,
+          username: verifiedData.data.username,
+          password: verifiedData.data.password,
+        }),
+      });
+      if (response.ok) {
+        router.replace('/login');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <div className='w-[463px] min-h-[506px] mx-auto py-10 px-6 border-gray-500 border-2 bg-dark-1 rounded-lg'>
@@ -80,7 +102,7 @@ const SignupModal = () => {
           <div className='mt-4'>
             <FormField
               control={loginForm.control}
-              name='userName'
+              name='username'
               render={({ field }) => {
                 return (
                   <FormItem>
@@ -112,6 +134,7 @@ const SignupModal = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
+                        type='password'
                         placeholder='Enter your password'
                         className='bg-dark-1 border-dark-1'
                         {...field}

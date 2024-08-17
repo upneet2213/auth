@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   Form,
@@ -13,8 +14,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { setCookie } from 'cookies-next';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 
 const LoginSchema = z.object({
   emailOrUserName: z
@@ -39,9 +40,24 @@ const LoginModal = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    setCookie('authToken', data.emailOrUserName);
-    router.replace('/login');
+  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
+    const parsedData = LoginSchema.safeParse(data);
+    if (parsedData.error) {
+      return null;
+    }
+    try {
+      const response = await signIn('credentials', {
+        emailOrUsername: parsedData.data.emailOrUserName,
+        password: parsedData.data.password,
+        redirect: false,
+      });
+
+      if (response?.ok) {
+        router.replace('/home');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <div className='w-[463px] min-h-[420px] mx-auto py-10 px-6 border-gray-500 border-2 bg-dark-1 rounded-lg'>
