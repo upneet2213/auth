@@ -2,6 +2,7 @@ import Post from '@/src/components/post';
 import PostCreator from '@/src/components/post-creator';
 import LogoutButton from './logout-button';
 import { samplePosts } from '@/src/sampleData';
+import { Metadata } from 'next';
 
 export default function Home() {
   const posts = samplePosts;
@@ -32,3 +33,7 @@ export default function Home() {
     </div>
   );
 }
+export const metadata: Metadata = {
+  title: 'Home',
+  description: 'Your feed of posts',
+};

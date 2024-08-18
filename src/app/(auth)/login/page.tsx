@@ -1,4 +1,5 @@
 import LoginModal from '@/src/components/login-modal';
+import { Metadata } from 'next';
 
 export default async function Login() {
   return (
@@ -7,3 +8,7 @@ export default async function Login() {
     </div>
   );
 }
+export const metadata: Metadata = {
+  title: 'Log In',
+  description: 'Log In to see posts',
+};

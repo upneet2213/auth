@@ -1,4 +1,5 @@
 import SignupModal from '@/src/components/signup-modal';
+import { Metadata } from 'next';
 
 export default function Signup() {
   return (
@@ -7,3 +8,8 @@ export default function Signup() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: 'Create account',
+  description: 'Create your account',
+};
